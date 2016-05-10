@@ -1,6 +1,7 @@
 //returns params, a stripped version of paramsGUI, without all the GUI fluff
 function guiGlue(paramsGUI, optionsGUI){
 
+
     //pass options to GUI e.g., { autoPlace: false }
     optionsGUI = optionsGUI || {};
 
@@ -26,7 +27,8 @@ function guiGlue(paramsGUI, optionsGUI){
         function unfurl(obj, folder, params){
 
             for (var key in obj){
-
+				if (key === "_isLeaf") continue; // consider: ignore underscores?
+				
                 var subObj = obj[key];
                 var leaf = isLeaf(subObj);
                 
@@ -50,9 +52,10 @@ function guiGlue(paramsGUI, optionsGUI){
             function isLeaf(obj){
 
                 var Leaf = true;
+				if (obj._isLeaf) return true;  // enforce hack using _isLeaf flag if available
+				
                 for (var key in obj){
-
-                    if (key === 'choices' && obj.display === 'selector') continue;
+                    if ( (key === 'choices' && obj.display === 'selector') ) continue;
 
                     if (Leaf){
                         var isObj = (Object.prototype.toString.call( obj[key] ) != '[object Object]');
@@ -74,13 +77,10 @@ function guiGlue(paramsGUI, optionsGUI){
             params[key] = options.value;
 
             var display = options.display || '';
-
+		
             switch (display){
                 case 'range':
-                    if (options.step)
-                        handle = folder.add(params, key, options.min, options.max).step(options.step);
-                    else
-                        handle = folder.add(params, key, options.min, options.max);
+                    handle = folder.add(params, key, options.min, options.max, options.step, options.enumeration);
                     break;
                 case 'selector':
                     handle = folder.add(params, key, options.choices);
