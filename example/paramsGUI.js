@@ -1,6 +1,16 @@
 //parameters with convenience functions for dat.gui to understand
 //everything is JSON. subobjects render to subfolders named by their key
 var paramsGUI = {
+	
+	text: {
+		
+		value: ""
+	},
+	
+	description: {
+		display: 'textarea',
+		value: ""
+	},
 
     shape : {
         display : 'selector',
@@ -10,6 +20,12 @@ var paramsGUI = {
             shape.changeShape(val);
         }
     },
+	
+	 testoptions : {
+		display : 'selector',
+        value: 2,
+        choices : {"choice1":1, "choice2":2},
+	 },
 
     //set display to none to avoid rendering in GUI
     //remains in the returned stripped params

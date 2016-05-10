@@ -88,6 +88,9 @@ function guiGlue(paramsGUI, optionsGUI){
                 case 'color':
                     handle = folder.addColor(params, key);
                     break;
+				case 'textarea':
+                    handle = folder.addTextArea(params, key);
+                    break;
                 case 'none':
                     break;
                 default:
