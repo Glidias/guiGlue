@@ -127,7 +127,7 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 			case 'none':
 				break;
 			default:
-				handle = folder.add(params, key);
+				handle = folder.add(params, key, options.min, options.max);
 				break;
 		}
 
