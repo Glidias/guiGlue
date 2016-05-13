@@ -45,8 +45,8 @@ var paramsGUI = {
                 max : 5,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+               // listen : true
             },
 
             x : {
@@ -56,8 +56,8 @@ var paramsGUI = {
                 max : 5,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+                //listen : true
             },
             y : {
                 display : 'range',
@@ -66,8 +66,8 @@ var paramsGUI = {
                 max : 5,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+                //listen : true
             }
 
         },
@@ -81,8 +81,8 @@ var paramsGUI = {
                 step : 1,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+                //listen : true
             },
             y : {
                 display : 'range',
@@ -92,8 +92,8 @@ var paramsGUI = {
                 step : 1,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+              //  listen : true
             },
             z : {
                 display : 'range',
@@ -103,8 +103,8 @@ var paramsGUI = {
                 step : 1,
                 onChange : function(val){
                     shape.render();
-                },
-                listen : true
+                }
+           //     listen : true
             }
         },
     },
