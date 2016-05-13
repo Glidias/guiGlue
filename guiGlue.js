@@ -17,6 +17,7 @@ function guiGlue(paramsGUI, optionsGUI){
     // but its default attributes have been removed
     var params = {};
     var gui = guiGlueRender(paramsGUI, optionsGUI, params);
+	
 
     //return stripped parameter object
     return params;
@@ -37,6 +38,8 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 	
 	//initial creation    
 	var gui = existingGUI ? existingGUI : new dat.GUI(optionsGUI);
+	gui["_guiGlueParams"] = params;
+	if (paramsGUI._hxclass) params._hxcls = paramsGUI._hxclass;
 
 	//walk the parameter tree
 	unfurl(paramsGUI, gui, params);
@@ -57,10 +60,14 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 			else{ 
 				//is folder
 				var subfolder = folder.addFolder(key);
+				params[key] = {};
+				subfolder["_guiGlue"] = obj[key];
+				subfolder["_guiGlueParams"] = params[key];
+				if ( obj[key]._hxclass)  params[key]._hxcls =  obj[key]._hxclass;
 				
 				// style parent LI with custom classes
 				if (obj[key]["_classes"]) {
-					var a = subfolder.domElement.parentNode;  // warning, hack to get parent LI
+					var a = subfolder.domElement.parentNode;  // warning, hack to get parent LI 
 					if (a.classList) {
 						a.classList.add.apply(a.classList, obj[key]._classes);
 						
@@ -71,8 +78,7 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 				
 				if ( (obj[key]._folded!=undefined ? !obj[key]._folded : !optionsGUI.folded) )
 					subfolder.open();
-
-				params[key] = {};
+					
 				unfurl(obj[key], subfolder, params[key]);
 			}
 
@@ -127,36 +133,43 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 			case 'none':
 				break;
 			default:
-				handle = folder.add(params, key, options.min, options.max);
+				handle = folder.add(params, key, options.min, options.max, options.step);
 				break;
 		}
-
-		if (handle && options.onChange)
-			handle.onChange(options.onChange);
-
-		if (handle && options.onFinishChange)
-			handle.onChange(options.onFinishChange);
-
-		if (handle && options.listen)
-			handle.listen();
+		if (handle) {
 			
-		// style parent LI with custom classes
-		if (options._classes) {
-			// warning: hackish way to get LI tag
-			var a = handle.domElement.parentNode.parentNode;
-			if (a.classList) {
-				a.classList.add.apply(a.classList, options._classes);
-				
-			} else {
-				a.className += ' '+options._classes.join(" ");
-			}
-		
-		}
+			if ( options.onChange)
+				handle.onChange(options.onChange);
 
+			if ( options.onFinishChange)
+				handle.onChange(options.onFinishChange);
+
+			if (  options.listen)
+				handle.listen();
+				
+			// style parent LI with custom classes
+			if (  options._classes) {
+				// warning: hackish way to get LI tag
+				var a = handle.domElement.parentNode.parentNode;
+				if (a.classList) {
+					a.classList.add.apply(a.classList, options._classes);
+					
+				} else {
+					a.className += ' '+options._classes.join(" ");
+				}
+			}
+			if  (options._readonly && handle["__input"]) {
+				
+				handle.__input.setAttribute("readonly", "readonly")
+			}
+			handle["_guiGlue"] = options;
+		
+			
+		}
 	}
 	
 	
-
+	gui["_guiGlue"] = paramsGUI;
 	return gui;
 
 }
