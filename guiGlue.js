@@ -23,6 +23,37 @@ function guiGlue(paramsGUI, optionsGUI){
     return params;
 }
 
+
+/*
+*	Re-apply back default settings from paramsGUI
+*	@param paramsGUI	The parameter definition used for GUI construction
+*	@param params		The target object which hold/receives striped down parameters with actual values. 
+*/
+function guiGlueApplyDefaults(paramsGUI, params) {
+	var key;
+	for (var key in paramsGUI){
+		if (key.charAt(0) === "_") continue;  // ignore all underscored properties
+		if (paramsGUI[key]) {
+			if (paramsGUI[key].value != undefined) {  // assumed leaf,  value null should be also be considered a valid settable value
+				params[key] = paramsGUI[key].value;
+			}
+			else {   // assumed nested object
+				if (params[key] != null ) {
+					if (typeof params[key] != "object") {
+						alert( "is object assertion failed for key:"+key);  // There might be an exception here..track it just in case.
+						continue;
+					}
+				}
+				else {  // dynamically recreate params again
+					params[key] = {};
+					if (paramsGUI._hxclass) params[key]._hxcls = paramsGUI._hxclass;
+				}
+				guiGlueApplyDefaults( paramsGUI[key], params[key]); // = value;
+			}
+		}
+	}
+}
+
 /*
 *	Basic function to render a GUI
 *	@param paramsGUI	The parameter definition for GUI construction
