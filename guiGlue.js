@@ -37,7 +37,7 @@ function guiGlueApplyDefaults(paramsGUI, params) {
 			if (paramsGUI[key].value != undefined) {  // assumed leaf,  value null should be also be considered a valid settable value
 				params[key] = paramsGUI[key].value;
 			}
-			else {   // assumed nested object
+			else if (!paramsGUI[key]._isLeaf && !paramsGUI[key]._subProxy) {   // assumed nested object
 				if (params[key] != null ) {
 					if (typeof params[key] != "object") {
 						alert( "is object assertion failed for key:"+key);  // There might be an exception here..track it just in case.
@@ -83,6 +83,7 @@ function guiGlueRender(paramsGUI, optionsGUI, params, existingGUI) {
 			if (key.charAt(0) === "_") continue;  // ignore all underscores
 			
 			var subObj = obj[key];
+	
 			var leaf = isLeaf(subObj);
 		
 			if (leaf){
